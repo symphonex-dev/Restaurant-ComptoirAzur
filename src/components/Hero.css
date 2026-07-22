@@ -1,0 +1,139 @@
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  color: var(--color-blanc-casse);
+  /* Même logique que .section (voir index.css) : le Hero est aussi la
+     cible d'une ancre de menu (#accueil) mais n'utilise pas la classe
+     .section, donc la valeur est répétée ici explicitement. */
+  scroll-margin-top: var(--header-offset);
+}
+
+.hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 60%;
+}
+
+/* Dégradé sombre qui garantit la lisibilité du texte quel que soit le
+   contenu de la photo en dessous — plus foncé en bas et à gauche, là où
+   vit le texte, plus léger en haut à droite pour laisser respirer l'image. */
+.hero__scrim {
+  position: absolute;
+  inset: 0;
+  /* Opacité renforcée par rapport à la version précédente : les reflets
+     lumineux et la nappe claire de la photo faisaient perdre en confort de
+     lecture au texte blanc qui la recouvre. Le dégradé reste diagonal
+     (plus sombre à gauche, où vit le texte, plus léger à droite) pour ne
+     pas complètement noyer la photo, mais chaque palier est monté d'environ
+     +0.17 afin que le texte ressorte nettement dans toutes les zones.
+     L'image de fond elle-même n'a pas été modifiée. */
+  background: linear-gradient(
+    115deg,
+    rgba(16, 22, 19, 0.92) 10%,
+    rgba(16, 22, 19, 0.7) 48%,
+    rgba(16, 22, 19, 0.45) 75%
+  );
+}
+
+.hero__content {
+  position: relative;
+  z-index: 1;
+  max-width: 640px;
+  padding-block: var(--space-7);
+}
+
+.hero__eyebrow {
+  color: var(--color-or);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 800ms var(--ease-standard), transform 800ms var(--ease-standard);
+}
+
+.hero__title {
+  font-size: clamp(2.75rem, 7vw, 5rem);
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 900ms var(--ease-standard) 120ms,
+    transform 900ms var(--ease-standard) 120ms;
+}
+
+.hero__title em {
+  font-style: italic;
+  color: var(--color-or);
+}
+
+.hero__subtitle {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.35rem;
+  margin-top: var(--space-2);
+  color: var(--color-blanc-casse);
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 900ms var(--ease-standard) 240ms,
+    transform 900ms var(--ease-standard) 240ms;
+}
+
+.hero__description {
+  margin-top: var(--space-3);
+  max-width: 46ch;
+  color: var(--text-muted-on-dark);
+  font-size: 1.02rem;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 900ms var(--ease-standard) 340ms,
+    transform 900ms var(--ease-standard) 340ms;
+}
+
+.hero__actions {
+  margin-top: var(--space-4);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 900ms var(--ease-standard) 440ms,
+    transform 900ms var(--ease-standard) 440ms;
+}
+
+.hero__ghost {
+  color: var(--color-blanc-casse);
+  border-color: rgba(243, 234, 216, 0.5);
+}
+
+/* Quand `mounted` passe à true côté React, on ajoute ce modificateur qui
+   ramène chaque élément à sa position et opacité finales. */
+.hero__content--in .hero__eyebrow,
+.hero__content--in .hero__title,
+.hero__content--in .hero__subtitle,
+.hero__content--in .hero__description,
+.hero__content--in .hero__actions {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hero__wave {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  line-height: 0;
+}
+
+@media (max-width: 560px) {
+  .hero__content {
+    padding-block: var(--space-6);
+  }
+}

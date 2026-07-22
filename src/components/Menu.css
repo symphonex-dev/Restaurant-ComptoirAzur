@@ -1,0 +1,97 @@
+.menu__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  border-bottom: 1px solid rgba(27, 36, 32, 0.12);
+  margin-bottom: var(--space-5);
+}
+
+.menu__tab {
+  background: transparent;
+  border: none;
+  padding: 0.85rem 0.4rem;
+  margin-right: var(--space-4);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+  position: relative;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.menu__tab::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--color-terracotta);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-base) var(--ease-standard);
+}
+
+.menu__tab--active {
+  color: var(--color-encre);
+}
+
+.menu__tab--active::after {
+  transform: scaleX(1);
+}
+
+.menu__tab:hover {
+  color: var(--color-encre);
+}
+
+.menu__list {
+  display: grid;
+  gap: var(--space-4);
+}
+
+@media (min-width: 720px) {
+  .menu__list {
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: var(--space-5);
+  }
+}
+
+.menu__dish-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+}
+
+.menu__dish-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Le pointillé qui relie le nom du plat à son prix : une convention typo
+   des vraies cartes de restaurant, on la reprend telle quelle plutôt que
+   d'inventer un motif décoratif arbitraire. */
+.menu__dish-leader {
+  flex: 1;
+  border-bottom: 1px dotted rgba(27, 36, 32, 0.35);
+  transform: translateY(-0.35em);
+  min-width: 16px;
+}
+
+.menu__dish-price {
+  font-family: var(--font-display);
+  font-weight: 600;
+  /* Terracotta foncé pour rester sous la même règle de contraste AA que
+     .eyebrow : ce texte repose sur le fond clair --color-sable. */
+  color: var(--color-terracotta-dark);
+  white-space: nowrap;
+  font-size: 1.1rem;
+}
+
+.menu__dish-desc {
+  margin-top: 0.35rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  max-width: 46ch;
+}

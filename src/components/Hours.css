@@ -1,0 +1,121 @@
+.hours__grid {
+  display: grid;
+  gap: var(--space-5);
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .hours__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-7);
+  }
+}
+
+.hours__card {
+  background: var(--color-encre);
+  color: var(--text-on-dark);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-soft);
+}
+
+.hours__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.hours__row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid rgba(243, 234, 216, 0.12);
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+}
+
+.hours__row:last-child {
+  border-bottom: none;
+}
+
+.hours__days {
+  font-weight: 600;
+  min-width: 150px;
+}
+
+.hours__spacer {
+  flex: 1;
+}
+
+.hours__time {
+  color: var(--color-or);
+}
+
+.hours__row--closed .hours__time {
+  color: var(--text-muted-on-dark);
+  font-style: italic;
+}
+
+.hours__contact {
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid rgba(243, 234, 216, 0.15);
+  display: grid;
+  gap: var(--space-3);
+}
+
+@media (min-width: 480px) {
+  .hours__contact {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.hours__contact-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-muted-on-dark);
+  margin-bottom: 0.3rem;
+}
+
+.hours__contact-value {
+  font-size: 1.02rem;
+  color: var(--color-blanc-casse);
+}
+
+a.hours__contact-value:hover {
+  color: var(--color-or);
+}
+
+/* ============================================================================
+   MOBILE — la boîte des horaires passait pour un contenu aligné à gauche en
+   deux colonnes (jour ... heure), pensé pour une largeur confortable. Sur
+   petit écran, cette mise en page à deux extrémités devient déséquilibrée ;
+   on bascule donc chaque ligne en colonne centrée, plus lisible et mieux
+   équilibrée visuellement dans la boîte sombre.
+============================================================================= */
+@media (max-width: 640px) {
+  .hours__card {
+    text-align: center;
+  }
+
+  .hours__row {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+  }
+
+  .hours__days {
+    min-width: 0;
+  }
+
+  .hours__spacer {
+    display: none;
+  }
+
+  .hours__contact {
+    justify-items: center;
+    text-align: center;
+  }
+}

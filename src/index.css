@@ -1,0 +1,390 @@
+/* ============================================================================
+   SYSTÈME DE DESIGN — LE COMPTOIR D'AZUR
+   ----------------------------------------------------------------------------
+   Tout le vocabulaire visuel du site (couleurs, typographies, espacements)
+   est centralisé ici sous forme de variables CSS. Pourquoi c'est important :
+   si demain le restaurant change de palette, on modifie 6 lignes ici plutôt
+   que de chasser des couleurs codées en dur dans 12 fichiers différents.
+   C'est l'équivalent CSS des constantes qu'on définirait en haut d'un
+   fichier JS plutôt que de répéter des valeurs magiques partout.
+============================================================================= */
+
+:root {
+  /* Couleurs — palette "Méditerranée au crépuscule" */
+  --color-sable: #f3ead8; /* fond clair, chaud, jamais un blanc pur */
+  --color-sable-light: #faf4e8; /* variante encore plus claire, cartes */
+  --color-encre: #1b2420; /* encre marine profonde — fonds sombres et texte */
+  --color-encre-soft: #2a342f; /* variante plus douce de l'encre, cartes sombres */
+  --color-azur: #2c5f63; /* couleur signature — liens, contours, accents */
+  --color-azur-light: #4a8388; /* azur éclairci — hover, dégradés */
+  --color-terracotta: #b85c38; /* réservé aux appels à l'action */
+  --color-terracotta-dark: #9c4b2d;
+  --color-or: #c9974c; /* détails, étoiles, séparateurs */
+  --color-olive: #6b7a4f; /* étiquettes, végétarien, touches discrètes */
+  --color-blanc-casse: #fffaf1;
+
+  /* Texte */
+  --text-primary: #1e2622;
+  --text-on-dark: #f3ead8;
+  --text-muted: #55584f;
+  --text-muted-on-dark: #c7c3b4;
+
+  /* Typographie */
+  --font-display: 'Cormorant Garamond', 'Georgia', serif;
+  --font-body: 'Jost', 'Segoe UI', sans-serif;
+
+  /* Espacements (échelle en rem, base 8px) */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-5: 3rem;
+  --space-6: 4.5rem;
+  --space-7: 7rem;
+
+  /* Rayons et ombres */
+  --radius-sm: 4px;
+  --radius-md: 10px;
+  --radius-lg: 24px;
+  --shadow-soft: 0 20px 45px -20px rgba(27, 36, 32, 0.35);
+  --shadow-card: 0 10px 30px -12px rgba(27, 36, 32, 0.25);
+
+  /* Transitions */
+  --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 200ms;
+  --duration-base: 450ms;
+
+  --container-width: 1180px;
+
+  /* Hauteur effective du header fixe — utilisée pour l'ancrage au scroll
+     afin d'éviter un décalage supplémentaire (double fond visible) entre
+     la barre de navigation et le début réel de chaque section. */
+  --header-offset: 80px;
+}
+
+/* ============================================================================
+   RESET — on repart d'une base neutre plutôt que des styles par défaut du
+   navigateur, qui varient d'un navigateur à l'autre et cassent souvent la
+   cohérence visuelle (marges de <h1>, tailles de <button>, etc.)
+============================================================================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* L'ajustement de l'ancrage sous le header fixe se fait désormais via
+     scroll-margin-top directement sur chaque section cible (.section et
+     .hero), plutôt qu'ici via scroll-padding-top : les deux techniques
+     s'additionnent si elles sont combinées, ce qui créait un écart trop
+     généreux. Une seule suffit. */
+  overscroll-behavior: none;
+  background: var(--color-encre);
+}
+
+body {
+  margin: 0;
+  /* Le fond du <body> ne sert normalement qu'aux quelques pixels visibles
+     lors d'un overscroll (chaque section définit son propre fond, clair ou
+     sombre, voir la règle .section ci-dessous) : on l'aligne sur l'encre
+     marine du header/footer plutôt que sur le sable clair, pour que ce
+     rebond reste discret et cohérent avec les deux extrémités sombres du
+     site, au lieu d'un flash blanc/crème qui jure avec elles. */
+  background: var(--color-encre);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  margin: 0;
+  font-weight: 600;
+  color: inherit;
+  line-height: 1.15;
+}
+
+p {
+  margin: 0;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Respecte le choix des personnes qui désactivent les animations au
+   niveau système — ce n'est pas une option, c'est un devoir d'accessibilité. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus clavier toujours visible — c'est non négociable pour l'accessibilité,
+   même quand esthétiquement on serait tenté de le masquer. */
+:focus-visible {
+  outline: 2px solid var(--color-azur);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* Classe utilitaire pour cacher visuellement un texte tout en le laissant
+   accessible aux lecteurs d'écran (ex : le lien "aller au contenu"). */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: -60px;
+  left: var(--space-2);
+  background: var(--color-encre);
+  color: var(--color-blanc-casse);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  z-index: 200;
+  transition: top var(--duration-fast) var(--ease-standard);
+}
+
+.skip-link:focus {
+  top: var(--space-2);
+}
+
+/* ============================================================================
+   UTILITAIRES DE MISE EN PAGE — réutilisés par tous les composants pour
+   garder une largeur de contenu et des marges cohérentes d'une section
+   à l'autre.
+============================================================================= */
+.container {
+  width: 100%;
+  max-width: var(--container-width);
+  margin-inline: auto;
+  padding-inline: var(--space-3);
+}
+
+.section {
+  /* Padding-top réduit : l'ancrage scroll-margin-top compense déjà le header
+     fixe — un padding-top trop généreux repoussait le titre trop bas et
+     créait une bande vide à double fond sous la barre de navigation. */
+  padding-top: var(--space-4);
+  padding-bottom: var(--space-6);
+  position: relative;
+  /* Fond explicite plutôt qu'hérité du <body> : la section vit "en dur" avec
+     sa propre couleur (identique à l'ancien fond hérité, donc aucun rendu ne
+     change), ce qui permet au <body> d'utiliser une autre couleur pour les
+     bords d'overscroll sans affecter Menu, Galerie, Réservation, Horaires
+     ou Contact, qui n'ont pas de modificateur --alt / --dark. */
+  background: var(--color-sable);
+  /* Aligné sur la hauteur réelle du header — pas de marge supplémentaire
+     au-delà, sinon une bande du fond <body> (encre) apparaît entre le menu
+     fixe et le début de la section lors d'un clic sur un onglet. */
+  scroll-margin-top: var(--header-offset);
+}
+
+.section--dark {
+  background: var(--color-encre);
+  color: var(--text-on-dark);
+}
+
+.section--alt {
+  background: var(--color-sable-light);
+}
+
+.section-head {
+  max-width: 640px;
+  margin-bottom: var(--space-5);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  /* --color-terracotta-dark plutôt que --color-terracotta : sur le fond
+     clair --color-sable, la variante claire tombe à ~3.95:1 de contraste
+     (sous le seuil AA de 4.5:1 pour du texte normal) alors que la variante
+     foncée atteint ~5:1. Le terracotta clair reste réservé aux fonds de
+     bouton, où il est associé à du texte blanc. */
+  color: var(--color-terracotta-dark);
+  font-weight: 500;
+  margin-bottom: var(--space-2);
+}
+
+.section--dark .eyebrow {
+  color: var(--color-or);
+}
+
+.section-title {
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 600;
+}
+
+.section-title em {
+  font-style: italic;
+  color: var(--color-azur);
+}
+
+.section--dark .section-title em {
+  color: var(--color-or);
+}
+
+.section-lead {
+  margin-top: var(--space-2);
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  max-width: 56ch;
+}
+
+.section--dark .section-lead {
+  color: var(--text-muted-on-dark);
+}
+
+/* ============================================================================
+   BOUTONS — deux variantes seulement (primaire / secondaire). Un site
+   cohérent n'a pas besoin de dix styles de bouton différents.
+============================================================================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: 0.9rem 1.8rem;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border: 1px solid transparent;
+  transition: transform var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background: var(--color-terracotta);
+  color: var(--color-blanc-casse);
+  box-shadow: 0 12px 24px -10px rgba(184, 92, 56, 0.55);
+}
+
+.btn-primary:hover {
+  background: var(--color-terracotta-dark);
+  box-shadow: 0 14px 28px -10px rgba(184, 92, 56, 0.65);
+}
+
+.btn-ghost {
+  background: transparent;
+  border-color: currentColor;
+  color: inherit;
+}
+
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.section:not(.section--dark) .btn-ghost:hover {
+  background: rgba(27, 36, 32, 0.06);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ============================================================================
+   ANIMATION AU SCROLL — piloté par le hook useScrollReveal (IntersectionObserver).
+   Le composant ajoute la classe .is-visible quand l'élément entre dans le
+   viewport ; tant qu'elle est absente, l'élément reste légèrement décalé
+   et transparent.
+============================================================================= */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 700ms var(--ease-standard), transform 700ms var(--ease-standard);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Le motif signature : une ligne-vague fine qui sépare certaines sections,
+   écho discret de la mer, dessinée en SVG dans WaveDivider.jsx. */
+.wave-divider {
+  display: block;
+  width: 100%;
+  height: 48px;
+  color: var(--color-sable);
+}
+
+.wave-divider--alt {
+  color: var(--color-sable-light);
+}
+
+.wave-divider--dark {
+  color: var(--color-encre);
+}
+
+@media (max-width: 860px) {
+  :root {
+    --header-offset: 64px;
+  }
+
+  .section {
+    padding-top: var(--space-3);
+    padding-bottom: var(--space-5);
+  }
+}
+
+@media (max-width: 400px) {
+  :root {
+    --header-offset: 58px;
+  }
+}
