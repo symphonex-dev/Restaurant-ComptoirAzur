@@ -7,7 +7,7 @@ const FOOTER_LINKS = [
   { href: '#carte', label: 'La carte' },
   { href: '#galerie', label: 'Galerie' },
   { href: '#avis', label: 'Avis' },
-  { href: '#horaires', label: 'Horaires & Accès' },
+  { href: '#horaires-acces', label: 'Horaires & Accès' },
   { href: '#contact', label: 'Contact' },
 ]
 

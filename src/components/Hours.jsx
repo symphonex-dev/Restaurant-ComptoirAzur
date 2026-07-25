@@ -1,5 +1,6 @@
 import './Hours.css'
 import Reveal from './Reveal'
+import LocationMap from './LocationMap'
 
 const SCHEDULE = [
   { days: 'Mardi — Samedi', hours: '12h00 – 14h30' },
@@ -10,10 +11,10 @@ const SCHEDULE = [
 
 export default function Hours() {
   return (
-    <section id="horaires" className="section hours">
+    <section id="horaires-acces" className="section hours">
       <div className="container hours__grid">
         <Reveal>
-          <p className="eyebrow">Horaires</p>
+          <p className="eyebrow">Horaires & Accès</p>
           <h2 className="section-title">
             Quand nous <em>retrouver</em>
           </h2>
@@ -49,6 +50,12 @@ export default function Hours() {
             </div>
           </div>
         </Reveal>
+      </div>
+
+      <div className="hours__map">
+        <div className="container">
+          <LocationMap />
+        </div>
       </div>
     </section>
   )

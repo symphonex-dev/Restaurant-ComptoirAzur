@@ -388,3 +388,18 @@ button {
     --header-offset: 58px;
   }
 }
+
+/* Desktop — le header compact (après scroll) mesure ~79 px alors que la
+   valeur par défaut (80 px) laissait apparaître une fine bande claire du
+   fond de section entre la barre de navigation et le contenu cible.
+   Le mobile n'est pas touché : ses valeurs ci-dessus restent en place. */
+@media (min-width: 861px) {
+  :root {
+    --header-offset: 79px;
+  }
+
+  .section,
+  .hero {
+    scroll-margin-top: var(--header-offset);
+  }
+}

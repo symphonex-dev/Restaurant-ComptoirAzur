@@ -6,7 +6,6 @@ import Gallery from './components/Gallery'
 import Testimonials from './components/Testimonials'
 import Reservation from './components/Reservation'
 import Hours from './components/Hours'
-import LocationMap from './components/LocationMap'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 import ScrollToTopButton from './components/ScrollToTopButton'
@@ -46,7 +45,6 @@ export default function App() {
         <Testimonials />
         <Reservation />
         <Hours />
-        <LocationMap />
         <Contact />
       </main>
 

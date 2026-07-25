@@ -77,7 +77,7 @@ export default function Testimonials() {
                 ))}
               </div>
               <p className="testimonials__comment">« {current.comment} »</p>
-              <footer className="testimonials__author">— {current.name}</footer>
+              <footer className="testimonials__author">{current.name}</footer>
             </blockquote>
           </div>
 

@@ -5,7 +5,7 @@
 
 export const testimonials = [
   {
-    name: 'Camille',
+    name: 'Camille D.',
     rating: 5,
     comment:
       "Le loup en croûte de sel restera un souvenir marquant. Le service est attentionné sans jamais être pesant, et la terrasse au coucher du soleil vaut à elle seule le déplacement.",

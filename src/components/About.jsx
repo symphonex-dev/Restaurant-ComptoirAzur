@@ -16,6 +16,15 @@ const HIGHLIGHTS = [
 export default function About() {
   return (
     <section id="a-propos" className="section section--alt about">
+      <div className="container">
+        <Reveal className="section-head about__head">
+          <p className="eyebrow">À propos</p>
+          <h2 className="section-title">
+            Une table qui prend le temps de <em>bien faire</em>
+          </h2>
+        </Reveal>
+      </div>
+
       <div className="container about__grid">
         <Reveal className="about__media">
           <img
@@ -26,13 +35,6 @@ export default function About() {
         </Reveal>
 
         <div className="about__content">
-          <Reveal>
-            <p className="eyebrow">Notre histoire</p>
-            <h2 className="section-title">
-              Une table qui prend le temps de <em>bien faire</em>
-            </h2>
-          </Reveal>
-
           <Reveal delay={80}>
             <p className="about__paragraph">
               Le Comptoir d'Azur est né d'une conviction simple : la Méditerranée offre déjà tout
