@@ -80,6 +80,7 @@ html {
      .hero), plutôt qu'ici via scroll-padding-top : les deux techniques
      s'additionnent si elles sont combinées, ce qui créait un écart trop
      généreux. Une seule suffit. */
+  scroll-padding-top: var(--header-offset);
   overscroll-behavior: none;
   background: var(--color-encre);
 }
@@ -213,10 +214,6 @@ button {
      bords d'overscroll sans affecter Menu, Galerie, Réservation, Horaires
      ou Contact, qui n'ont pas de modificateur --alt / --dark. */
   background: var(--color-sable);
-  /* Aligné sur la hauteur réelle du header — pas de marge supplémentaire
-     au-delà, sinon une bande du fond <body> (encre) apparaît entre le menu
-     fixe et le début de la section lors d'un clic sur un onglet. */
-  scroll-margin-top: var(--header-offset);
 }
 
 .section--dark {
@@ -395,11 +392,6 @@ button {
    Le mobile n'est pas touché : ses valeurs ci-dessus restent en place. */
 @media (min-width: 861px) {
   :root {
-    --header-offset: 79px;
-  }
-
-  .section,
-  .hero {
-    scroll-margin-top: var(--header-offset);
+    --header-offset: 80px;
   }
 }
