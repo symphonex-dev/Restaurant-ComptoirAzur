@@ -1,6 +1,9 @@
 .hero {
   position: relative;
-  min-height: 100vh;
+  /* Utilisation de 100dvh (dynamic viewport height) et ajustement pour éviter que le bas de la section suivante ne dépasse au premier affichage */
+  height: 100vh;
+  min-height: 100dvh;
+  max-height: 100vh;
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -125,11 +128,13 @@
 
 .hero__wave {
   position: absolute;
-  bottom: -1px;
+  bottom: 0;
   left: 0;
   right: 0;
-  z-index: 1;
+  width: 100%;
+  z-index: 2;
   line-height: 0;
+  pointer-events: none;
 }
 
 @media (max-width: 560px) {

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import './Hero.css'
-import WaveDivider from './WaveDivider'
 
 const HERO_IMAGE =
   'https://images.unsplash.com/photo-1756680967373-c3205a8a8b31?w=1900&q=80&auto=format&fit=crop'
@@ -53,10 +52,6 @@ export default function Hero() {
             Découvrir la carte
           </a>
         </div>
-      </div>
-
-      <div className="hero__wave">
-        <WaveDivider />
       </div>
     </section>
   )

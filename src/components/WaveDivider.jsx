@@ -15,9 +15,10 @@ export default function WaveDivider({ variant = '' }) {
       preserveAspectRatio="none"
       aria-hidden="true"
       focusable="false"
+      style={{ display: 'block', width: '100%', height: 'auto' }}
     >
       <path
-        d="M0 32C120 10 240 10 360 32C480 54 600 54 720 32C840 10 960 10 1080 32C1140 43 1170 43 1200 38V60H0V32Z"
+        d="M0,60 L0,32 C120,10 240,10 360,32 C480,54 600,54 720,32 C840,10 960,10 1080,32 C1140,43 1170,43 1200,38 L1200,60 Z"
         fill="currentColor"
       />
     </svg>
