@@ -1,17 +1,23 @@
 import { Instagram, Facebook } from 'lucide-react'
 import './Footer.css'
+import { useLanguage } from '../i18n/LanguageContext'
 
+// Mêmes ancres que dans Header.jsx (NAV_LINKS) : on réutilise volontairement
+// la même clé de traduction t.header.links.<key> plutôt que de dupliquer un
+// jeu de libellés distinct dans le dictionnaire de traductions. Un seul
+// endroit à mettre à jour si un jour un intitulé de navigation change.
 const FOOTER_LINKS = [
-  { href: '#accueil', label: 'Accueil' },
-  { href: '#a-propos', label: 'À propos' },
-  { href: '#carte', label: 'La carte' },
-  { href: '#galerie', label: 'Galerie' },
-  { href: '#avis', label: 'Avis' },
-  { href: '#horaires-acces', label: 'Horaires & Accès' },
-  { href: '#contact', label: 'Contact' },
+  { href: '#accueil', key: 'accueil' },
+  { href: '#a-propos', key: 'apropos' },
+  { href: '#carte', key: 'carte' },
+  { href: '#galerie', key: 'galerie' },
+  { href: '#avis', key: 'avis' },
+  { href: '#horaires-acces', key: 'horaires' },
+  { href: '#contact', key: 'contact' },
 ]
 
 export default function Footer() {
+  const { t } = useLanguage()
   const year = new Date().getFullYear()
 
   return (
@@ -22,14 +28,14 @@ export default function Footer() {
             <p className="footer__logo">
               Le Comptoir <em>d'Azur</em>
             </p>
-            <p className="footer__tagline">Cuisine méditerranéenne · Nice</p>
+            <p className="footer__tagline">{t.footer.tagline}</p>
           </div>
 
-          <nav className="footer__nav" aria-label="Navigation du pied de page">
+          <nav className="footer__nav" aria-label={t.footer.navAria}>
             <ul>
               {FOOTER_LINKS.map((link) => (
                 <li key={link.href}>
-                  <a href={link.href}>{link.label}</a>
+                  <a href={link.href}>{t.header.links[link.key]}</a>
                 </li>
               ))}
             </ul>
@@ -46,10 +52,7 @@ export default function Footer() {
         </div>
 
         <div className="footer__bottom">
-          <p className="footer__legal">
-            © {year} Le Comptoir d'Azur — Tous droits réservés. SIRET fictif : 000 000 000 00000.
-            Site à visée de démonstration.
-          </p>
+          <p className="footer__legal">{t.footer.legal(year)}</p>
         </div>
       </div>
     </footer>

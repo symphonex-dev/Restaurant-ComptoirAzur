@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './Reservation.css'
 import Reveal from './Reveal'
+import { useLanguage } from '../i18n/LanguageContext'
 
 const INITIAL_FORM = {
   firstName: '',
@@ -35,39 +36,45 @@ function getTodayISO() {
 // contente ensuite d'afficher errors.champX s'il existe. Avoir une seule
 // source de vérité pour les erreurs simplifie énormément la relecture du
 // code : la logique de validation n'est jamais éparpillée.
+//
+// `errorMessages` est désormais un paramètre (t.reservation.errors, fourni
+// par le composant) plutôt qu'un texte en dur : la fonction reste pure
+// (mêmes entrées → même sortie) tout en produisant des messages dans la
+// langue actuellement affichée par le site.
 // ============================================================================
-function validate(form) {
+function validate(form, errorMessages) {
   const errors = {}
 
   if (form.firstName.trim().length < 2) {
-    errors.firstName = 'Merci d\'indiquer votre prénom.'
+    errors.firstName = errorMessages.firstName
   }
   if (form.lastName.trim().length < 2) {
-    errors.lastName = 'Merci d\'indiquer votre nom.'
+    errors.lastName = errorMessages.lastName
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
-    errors.email = 'Merci de saisir une adresse email valide.'
+    errors.email = errorMessages.email
   }
   if (!/^(\+33|0)[1-9](\d{2}){4}$/.test(form.phone.replace(/[\s.-]/g, ''))) {
-    errors.phone = 'Merci de saisir un numéro de téléphone valide (ex : 06 01 02 03 04).'
+    errors.phone = errorMessages.phone
   }
   if (!form.date) {
-    errors.date = 'Merci de choisir une date.'
+    errors.date = errorMessages.dateRequired
   } else if (form.date < getTodayISO()) {
-    errors.date = 'La date ne peut pas être dans le passé.'
+    errors.date = errorMessages.datePast
   }
   if (!form.time) {
-    errors.time = 'Merci de choisir une heure.'
+    errors.time = errorMessages.time
   }
   const guestsNumber = Number(form.guests)
   if (!Number.isInteger(guestsNumber) || guestsNumber < 1 || guestsNumber > 20) {
-    errors.guests = 'Merci d\'indiquer un nombre de convives entre 1 et 20.'
+    errors.guests = errorMessages.guests
   }
 
   return errors
 }
 
 export default function Reservation() {
+  const { t } = useLanguage()
   const [form, setForm] = useState(INITIAL_FORM)
   const [errors, setErrors] = useState({})
   // status : 'idle' | 'submitting' | 'success'
@@ -89,7 +96,7 @@ export default function Reservation() {
     // instantanément tout l'état React qu'on vient de construire.
     event.preventDefault()
 
-    const validationErrors = validate(form)
+    const validationErrors = validate(form, t.reservation.errors)
     setErrors(validationErrors)
     if (Object.keys(validationErrors).length > 0) {
       return
@@ -118,21 +125,19 @@ export default function Reservation() {
     <section id="reservation" className="section reservation">
       <div className="container reservation__grid">
         <Reveal className="reservation__intro">
-          <p className="eyebrow">Réservation</p>
+          <p className="eyebrow">{t.reservation.eyebrow}</p>
           <h2 className="section-title">
-            Réservez votre <em>table</em>
+            {t.reservation.titleBefore} <em>{t.reservation.titleEm}</em>
+            {t.reservation.titleAfter}
           </h2>
-          <p className="section-lead">
-            Pour les groupes de plus de 8 personnes ou les demandes de dernière minute, préférez
-            un appel direct au restaurant — nous ferons de notre mieux pour vous accueillir.
-          </p>
+          <p className="section-lead">{t.reservation.lead}</p>
         </Reveal>
 
         <Reveal delay={100} className="reservation__form-wrapper">
           <form className="reservation__form" onSubmit={handleSubmit} noValidate>
             <div className="reservation__row">
               <div className="reservation__field">
-                <label htmlFor="firstName">Prénom</label>
+                <label htmlFor="firstName">{t.reservation.labels.firstName}</label>
                 <input
                   id="firstName"
                   name="firstName"
@@ -151,7 +156,7 @@ export default function Reservation() {
               </div>
 
               <div className="reservation__field">
-                <label htmlFor="lastName">Nom</label>
+                <label htmlFor="lastName">{t.reservation.labels.lastName}</label>
                 <input
                   id="lastName"
                   name="lastName"
@@ -172,14 +177,14 @@ export default function Reservation() {
 
             <div className="reservation__row">
               <div className="reservation__field">
-                <label htmlFor="email">Email</label>
+                <label htmlFor="email">{t.reservation.labels.email}</label>
                 <input
                   id="email"
                   name="email"
                   type="email"
                   value={form.email}
                   onChange={handleChange}
-                  placeholder="exemple@gmail.com"
+                  placeholder={t.reservation.placeholders.email}
                   aria-invalid={Boolean(errors.email)}
                   aria-describedby={errors.email ? 'email-error' : undefined}
                   autoComplete="email"
@@ -192,14 +197,14 @@ export default function Reservation() {
               </div>
 
               <div className="reservation__field">
-                <label htmlFor="phone">Téléphone</label>
+                <label htmlFor="phone">{t.reservation.labels.phone}</label>
                 <input
                   id="phone"
                   name="phone"
                   type="tel"
                   value={form.phone}
                   onChange={handleChange}
-                  placeholder="06 01 02 03 04"
+                  placeholder={t.reservation.placeholders.phone}
                   aria-invalid={Boolean(errors.phone)}
                   aria-describedby={errors.phone ? 'phone-error' : undefined}
                   autoComplete="tel"
@@ -214,7 +219,7 @@ export default function Reservation() {
 
             <div className="reservation__row reservation__row--three">
               <div className="reservation__field">
-                <label htmlFor="date">Date</label>
+                <label htmlFor="date">{t.reservation.labels.date}</label>
                 <input
                   id="date"
                   name="date"
@@ -233,7 +238,7 @@ export default function Reservation() {
               </div>
 
               <div className="reservation__field">
-                <label htmlFor="time">Heure</label>
+                <label htmlFor="time">{t.reservation.labels.time}</label>
                 <input
                   id="time"
                   name="time"
@@ -251,7 +256,7 @@ export default function Reservation() {
               </div>
 
               <div className="reservation__field">
-                <label htmlFor="guests">Convives</label>
+                <label htmlFor="guests">{t.reservation.labels.guests}</label>
                 <input
                   id="guests"
                   name="guests"
@@ -272,7 +277,7 @@ export default function Reservation() {
             </div>
 
             <div className="reservation__field">
-              <label htmlFor="message">Message (allergies, occasion particulière…)</label>
+              <label htmlFor="message">{t.reservation.labels.message}</label>
               <textarea
                 id="message"
                 name="message"
@@ -283,7 +288,7 @@ export default function Reservation() {
             </div>
 
             <button type="submit" className="btn btn-primary reservation__submit" disabled={status === 'submitting'}>
-              {status === 'submitting' ? 'Envoi en cours…' : 'Confirmer la demande'}
+              {status === 'submitting' ? t.reservation.submitting : t.reservation.submit}
             </button>
 
             {/* role="status" annonce le résultat aux lecteurs d'écran sans
@@ -291,7 +296,7 @@ export default function Reservation() {
                 été trop intrusif pour un simple message de succès. */}
             {status === 'success' && (
               <p className="reservation__feedback reservation__feedback--success" role="status">
-                Simulé avec succès ! Ce site est uniquement une vitrine de démonstration.
+                {t.reservation.success}
               </p>
             )}
           </form>

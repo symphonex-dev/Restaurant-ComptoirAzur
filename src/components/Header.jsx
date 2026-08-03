@@ -1,17 +1,20 @@
 import { useEffect, useState } from 'react'
 import './Header.css'
+import { useLanguage } from '../i18n/LanguageContext'
 
-// Liens de navigation. On les stocke dans un tableau plutôt que de répéter
-// 8 fois la même balise <a> à la main : plus la liste change souvent,
-// plus ça vaut le coup de la piloter par une boucle .map().
+// Liens de navigation. On stocke uniquement l'ancre (href) et la CLÉ de
+// traduction ici, jamais le libellé affiché directement : le libellé est
+// allé chercher dans t.header.links à chaque rendu, pour rester à jour
+// quelle que soit la langue active. Le tableau lui-même ne change jamais
+// d'une langue à l'autre — seul son contenu affiché change.
 const NAV_LINKS = [
-  { href: '#accueil', label: 'Accueil' },
-  { href: '#a-propos', label: 'À propos' },
-  { href: '#carte', label: 'La carte' },
-  { href: '#galerie', label: 'Galerie' },
-  { href: '#avis', label: 'Avis' },
-  { href: '#horaires-acces', label: 'Horaires & Accès' },
-  { href: '#contact', label: 'Contact' },
+  { href: '#accueil', key: 'accueil' },
+  { href: '#a-propos', key: 'apropos' },
+  { href: '#carte', key: 'carte' },
+  { href: '#galerie', key: 'galerie' },
+  { href: '#avis', key: 'avis' },
+  { href: '#horaires-acces', key: 'horaires' },
+  { href: '#contact', key: 'contact' },
 ]
 
 export default function Header() {
@@ -22,6 +25,7 @@ export default function Header() {
   // changement. On ne touche jamais le DOM nous-mêmes.
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { language, setLanguage, t } = useLanguage()
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 24)
@@ -41,37 +45,80 @@ export default function Header() {
           Le Comptoir <em>d'Azur</em>
         </a>
 
-        <nav
-          id="header-nav"
-          className={`header__nav ${isMenuOpen ? 'header__nav--open' : ''}`}
-          aria-label="Navigation principale"
-        >
-          <ul>
-            {NAV_LINKS.map((link) => (
-              <li key={link.href}>
-                <a href={link.href} onClick={handleLinkClick}>
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-          <a href="#reservation" className="btn btn-primary header__cta" onClick={handleLinkClick}>
-            Réserver une table
-          </a>
-        </nav>
+        {/* ====================================================================
+            header__right regroupe TOUT ce qui vit à droite du logo : la nav
+            (qui devient un panneau plein écran sur mobile), le sélecteur de
+            langue et le bouton hamburger. Pourquoi les sortir de <nav> :
+            le sélecteur de langue et le hamburger doivent rester visibles et
+            cliquables EN PERMANENCE, y compris sur mobile quand le menu de
+            navigation est fermé — contrairement aux liens eux-mêmes, qui
+            eux se cachent dans le panneau tant qu'il n'est pas ouvert.
+        ==================================================================== */}
+        <div className="header__right">
+          <nav
+            id="header-nav"
+            className={`header__nav ${isMenuOpen ? 'header__nav--open' : ''}`}
+            aria-label={t.header.navAria}
+          >
+            <ul>
+              {NAV_LINKS.map((link) => (
+                <li key={link.href}>
+                  <a href={link.href} onClick={handleLinkClick}>
+                    {t.header.links[link.key]}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <a href="#reservation" className="btn btn-primary header__cta" onClick={handleLinkClick}>
+              {t.common.reserveCta}
+            </a>
+          </nav>
 
-        <button
-          type="button"
-          className={`header__toggle ${isMenuOpen ? 'header__toggle--open' : ''}`}
-          aria-label={isMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
-          aria-expanded={isMenuOpen}
-          aria-controls="header-nav"
-          onClick={() => setIsMenuOpen((open) => !open)}
-        >
-          <span />
-          <span />
-          <span />
-        </button>
+          {/* ==================================================================
+              SÉLECTEUR DE LANGUE FR / EN
+              ------------------------------------------------------------------
+              Un simple groupe de 2 boutons (et non un <select>) : plus rapide
+              à activer en un clic/tap, et le libellé "FR" / "EN" reste
+              visible en permanence pour les deux options — contrairement à un
+              menu déroulant qui masquerait l'option non sélectionnée.
+              role="group" + aria-label rattachent les deux boutons ensemble
+              pour un lecteur d'écran ; aria-pressed indique l'état actif de
+              chacun, exactement comme un bouton "toggle" classique.
+          ================================================================== */}
+          <div className="lang-toggle" role="group" aria-label={t.header.langToggle.groupLabel}>
+            <button
+              type="button"
+              className={`lang-toggle__option ${language === 'fr' ? 'lang-toggle__option--active' : ''}`}
+              aria-pressed={language === 'fr'}
+              aria-label={t.header.langToggle.switchToFr}
+              onClick={() => setLanguage('fr')}
+            >
+              FR
+            </button>
+            <button
+              type="button"
+              className={`lang-toggle__option ${language === 'en' ? 'lang-toggle__option--active' : ''}`}
+              aria-pressed={language === 'en'}
+              aria-label={t.header.langToggle.switchToEn}
+              onClick={() => setLanguage('en')}
+            >
+              EN
+            </button>
+          </div>
+
+          <button
+            type="button"
+            className={`header__toggle ${isMenuOpen ? 'header__toggle--open' : ''}`}
+            aria-label={isMenuOpen ? t.header.closeMenu : t.header.openMenu}
+            aria-expanded={isMenuOpen}
+            aria-controls="header-nav"
+            onClick={() => setIsMenuOpen((open) => !open)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
+        </div>
       </div>
     </header>
   )

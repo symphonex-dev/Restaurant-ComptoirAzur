@@ -7,6 +7,12 @@
 }
 
 .menu__tab {
+  /* display:inline-flex (plutôt que le inline-block par défaut d'un
+     <button>) pour centrer proprement le libellé à l'intérieur du
+     min-width fixé plus bas, exactement comme pour les liens du header. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: transparent;
   border: none;
   padding: 0.85rem 0.4rem;
@@ -17,7 +23,36 @@
   letter-spacing: 0.02em;
   color: var(--text-muted);
   position: relative;
+  text-align: center;
   transition: color var(--duration-fast) var(--ease-standard);
+}
+
+/* ============================================================================
+   FIX ALIGNEMENT FR ↔ EN — largeurs minimales par onglet
+   ----------------------------------------------------------------------------
+   Même logique que pour les liens du header (voir le commentaire détaillé
+   dans Header.css) : "Plats" (5 caractères) devient "Main Courses" (12),
+   un écart important qui, sans intervention, changerait la largeur totale
+   de .menu__tabs et donnerait l'impression que la barre d'onglets "saute"
+   au changement de langue. On fixe donc, pour chaque onglet, un min-width
+   couvrant la plus large des deux traductions — ciblé via data-tab-id
+   (l'id de catégorie, identique en français et en anglais) plutôt que le
+   contenu affiché, qui lui varie.
+============================================================================= */
+.menu__tab[data-tab-id='entrees'] {
+  min-width: 5.6rem;
+}
+
+.menu__tab[data-tab-id='plats'] {
+  min-width: 8.8rem;
+}
+
+.menu__tab[data-tab-id='desserts'] {
+  min-width: 6rem;
+}
+
+.menu__tab[data-tab-id='boissons'] {
+  min-width: 6rem;
 }
 
 .menu__tab::after {
@@ -67,6 +102,17 @@
   font-size: 1.25rem;
   font-weight: 600;
   white-space: nowrap;
+}
+
+/* Certains intitulés anglais (ex. "Nice-style stuffed vegetables") sont plus
+   longs que leur équivalent français. En dessous de 380px de large, on
+   autorise le retour à la ligne plutôt que de forcer un débordement
+   horizontal disgracieux : le pointillé décoratif (.menu__dish-leader)
+   disparaît alors naturellement puisqu'il n'a plus de place à occuper. */
+@media (max-width: 380px) {
+  .menu__dish-name {
+    white-space: normal;
+  }
 }
 
 /* Le pointillé qui relie le nom du plat à son prix : une convention typo

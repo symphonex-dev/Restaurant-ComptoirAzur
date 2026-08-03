@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { ArrowUp } from 'lucide-react'
 import './ScrollToTopButton.css'
+import { useLanguage } from '../i18n/LanguageContext'
 
 // Petit composant autonome : il n'affiche rien tant que la personne n'a pas
 // scrollé au-delà d'un certain seuil, pour éviter d'encombrer l'écran sur
@@ -9,6 +10,7 @@ import './ScrollToTopButton.css'
 // se contente de faire <ScrollToTopButton /> sans aucune prop).
 export default function ScrollToTopButton() {
   const [isVisible, setIsVisible] = useState(false)
+  const { t } = useLanguage()
 
   useEffect(() => {
     const handleScroll = () => setIsVisible(window.scrollY > 700)
@@ -20,7 +22,7 @@ export default function ScrollToTopButton() {
     <a
       href="#accueil"
       className={`scroll-top ${isVisible ? 'scroll-top--visible' : ''}`}
-      aria-label="Remonter en haut de la page"
+      aria-label={t.scrollTop.label}
       aria-hidden={!isVisible}
       tabIndex={isVisible ? 0 : -1}
     >

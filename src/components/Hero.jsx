@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import './Hero.css'
+import { useLanguage } from '../i18n/LanguageContext'
 
 const HERO_IMAGE =
   'https://images.unsplash.com/photo-1756680967373-c3205a8a8b31?w=1900&q=80&auto=format&fit=crop'
@@ -16,6 +17,7 @@ const HERO_IMAGE =
 // ============================================================================
 export default function Hero() {
   const [mounted, setMounted] = useState(false)
+  const { t } = useLanguage()
 
   useEffect(() => {
     const timer = setTimeout(() => setMounted(true), 80)
@@ -23,33 +25,27 @@ export default function Hero() {
   }, [])
 
   return (
-    <section id="accueil" className="hero" aria-label="Présentation du restaurant">
+    <section id="accueil" className="hero" aria-label={t.hero.ariaLabel}>
       <div className="hero__media">
-        <img
-          src={HERO_IMAGE}
-          alt="Terrasse de restaurant surplombant la mer Méditerranée au coucher du soleil"
-          className="hero__image"
-        />
+        <img src={HERO_IMAGE} alt={t.hero.imageAlt} className="hero__image" />
         <div className="hero__scrim" aria-hidden="true" />
       </div>
 
       <div className={`container hero__content ${mounted ? 'hero__content--in' : ''}`}>
-        <p className="eyebrow hero__eyebrow">Nice · Cuisine méditerranéenne</p>
+        <p className="eyebrow hero__eyebrow">{t.hero.eyebrow}</p>
+        {/* Le nom du restaurant est un nom propre : il ne se traduit jamais,
+            contrairement au reste du contenu de cette section. */}
         <h1 className="hero__title">
           Le Comptoir <em>d'Azur</em>
         </h1>
-        <p className="hero__subtitle">La mer, le soleil, et une table qui leur ressemble.</p>
-        <p className="hero__description">
-          Au cœur du Vieux-Nice, une cuisine méditerranéenne exigeante qui met à l'honneur les
-          produits de la pêche du jour et les saveurs du Sud, dans un cadre pensé pour ralentir
-          le temps d'un repas.
-        </p>
+        <p className="hero__subtitle">{t.hero.subtitle}</p>
+        <p className="hero__description">{t.hero.description}</p>
         <div className="hero__actions">
           <a href="#reservation" className="btn btn-primary">
-            Réserver une table
+            {t.common.reserveCta}
           </a>
           <a href="#carte" className="btn btn-ghost hero__ghost">
-            Découvrir la carte
+            {t.hero.ctaMenu}
           </a>
         </div>
       </div>

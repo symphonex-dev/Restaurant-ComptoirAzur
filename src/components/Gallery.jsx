@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import './Gallery.css'
 import Reveal from './Reveal'
-import { galleryImages } from '../data/galleryData'
+import { galleryImagesByLang } from '../data/galleryData'
+import { useLanguage } from '../i18n/LanguageContext'
 
 // ============================================================================
 // COMPOSANT Gallery — avec lightbox (visionneuse plein écran)
@@ -18,6 +19,12 @@ import { galleryImages } from '../data/galleryData'
 // est le "nettoyage" — l'équivalent d'un removeEventListener explicite).
 // ============================================================================
 export default function Gallery() {
+  const { language, t } = useLanguage()
+  // Même liste de photos dans les deux langues (mêmes URLs, dans le même
+  // ordre) — seules la légende (caption) et l'alt text sont traduits.
+  // L'index actif (activeIndex) reste donc valide après un changement de
+  // langue puisque la longueur et l'ordre du tableau ne changent jamais.
+  const galleryImages = galleryImagesByLang[language]
   const [activeIndex, setActiveIndex] = useState(null)
   const closeButtonRef = useRef(null)
   const lastTriggerRef = useRef(null)
@@ -40,11 +47,11 @@ export default function Gallery() {
 
   const showNext = useCallback(() => {
     setActiveIndex((current) => (current + 1) % galleryImages.length)
-  }, [])
+  }, [galleryImages.length])
 
   const showPrevious = useCallback(() => {
     setActiveIndex((current) => (current - 1 + galleryImages.length) % galleryImages.length)
-  }, [])
+  }, [galleryImages.length])
 
   // Écouteurs clavier actifs uniquement pendant que la lightbox est ouverte.
   useEffect(() => {
@@ -95,14 +102,12 @@ export default function Gallery() {
     <section id="galerie" className="section gallery">
       <div className="container">
         <Reveal className="section-head">
-          <p className="eyebrow">Galerie</p>
+          <p className="eyebrow">{t.gallery.eyebrow}</p>
           <h2 className="section-title">
-            Un aperçu de <em>l'ambiance</em>
+            {t.gallery.titleBefore} <em>{t.gallery.titleEm}</em>
+            {t.gallery.titleAfter}
           </h2>
-          <p className="section-lead">
-            La salle, la cuisine, les produits et les assiettes — un avant-goût de ce qui vous
-            attend. Cliquez sur une photo pour l'agrandir.
-          </p>
+          <p className="section-lead">{t.gallery.lead}</p>
         </Reveal>
 
         <ul className="gallery__grid">
@@ -127,7 +132,7 @@ export default function Gallery() {
           className="lightbox"
           role="dialog"
           aria-modal="true"
-          aria-label={`Photo : ${activeImage.caption}`}
+          aria-label={t.gallery.dialogLabel(activeImage.caption)}
           ref={dialogRef}
           onClick={(event) => {
             // Ferme si on clique sur le fond sombre, mais pas sur l'image
@@ -141,7 +146,7 @@ export default function Gallery() {
             ref={closeButtonRef}
             className="lightbox__close"
             onClick={close}
-            aria-label="Fermer la visionneuse"
+            aria-label={t.gallery.close}
           >
             ✕
           </button>
@@ -150,7 +155,7 @@ export default function Gallery() {
             type="button"
             className="lightbox__nav lightbox__nav--prev"
             onClick={showPrevious}
-            aria-label="Photo précédente"
+            aria-label={t.gallery.prev}
           >
             ‹
           </button>
@@ -164,7 +169,7 @@ export default function Gallery() {
             type="button"
             className="lightbox__nav lightbox__nav--next"
             onClick={showNext}
-            aria-label="Photo suivante"
+            aria-label={t.gallery.next}
           >
             ›
           </button>

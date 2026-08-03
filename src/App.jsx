@@ -9,6 +9,7 @@ import Hours from './components/Hours'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 import ScrollToTopButton from './components/ScrollToTopButton'
+import { useLanguage } from './i18n/LanguageContext'
 
 // ============================================================================
 // App — composant racine
@@ -25,6 +26,8 @@ import ScrollToTopButton from './components/ScrollToTopButton'
 // déplace deux lignes ici, sans toucher au HTML ni au CSS.
 // ============================================================================
 export default function App() {
+  const { t } = useLanguage()
+
   return (
     <>
       {/* Lien d'évitement : invisible tant qu'il n'a pas le focus, il permet
@@ -32,7 +35,7 @@ export default function App() {
           de navigation répété sur chaque page. Bonne pratique d'accessibilité
           standard, quasi invisible pour les autres visiteurs. */}
       <a href="#accueil" className="skip-link">
-        Aller au contenu principal
+        {t.skipLink}
       </a>
 
       <Header />

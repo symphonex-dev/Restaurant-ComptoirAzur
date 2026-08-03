@@ -1,32 +1,31 @@
 import './Hours.css'
 import Reveal from './Reveal'
 import LocationMap from './LocationMap'
-
-const SCHEDULE = [
-  { days: 'Mardi — Samedi', hours: '12h00 – 14h30' },
-  { days: '', hours: '19h00 – 22h30' },
-  { days: 'Dimanche', hours: '11h00 – 15h00 (brunch)' },
-  { days: 'Lundi', hours: 'Fermé', closed: true },
-]
+import { useLanguage } from '../i18n/LanguageContext'
 
 export default function Hours() {
+  const { t } = useLanguage()
+  // Le planning (SCHEDULE) vient du dictionnaire de traductions : au-delà
+  // des jours traduits, les horaires eux-mêmes changent de format selon la
+  // langue (24h en français, 12h AM/PM en anglais) — une vraie adaptation
+  // culturelle, pas seulement une traduction mot à mot des libellés.
+  const schedule = t.hours.schedule
+
   return (
     <section id="horaires-acces" className="section hours">
       <div className="container hours__grid">
         <Reveal>
-          <p className="eyebrow">Horaires & Accès</p>
+          <p className="eyebrow">{t.hours.eyebrow}</p>
           <h2 className="section-title">
-            Quand nous <em>retrouver</em>
+            {t.hours.titleBefore} <em>{t.hours.titleEm}</em>
+            {t.hours.titleAfter}
           </h2>
-          <p className="section-lead">
-            Le service continue étant rare à Nice, nous préférons deux services bien tenus qu'un
-            service continu bâclé — c'est aussi ça, le respect du produit.
-          </p>
+          <p className="section-lead">{t.hours.lead}</p>
         </Reveal>
 
         <Reveal delay={100} className="hours__card">
           <ul className="hours__list">
-            {SCHEDULE.map((row, index) => (
+            {schedule.map((row, index) => (
               <li key={index} className={`hours__row ${row.closed ? 'hours__row--closed' : ''}`}>
                 {row.days && <span className="hours__days">{row.days}</span>}
                 <span className="hours__spacer" aria-hidden="true" />
@@ -37,13 +36,13 @@ export default function Hours() {
 
           <div className="hours__contact">
             <div>
-              <p className="hours__contact-label">Téléphone</p>
+              <p className="hours__contact-label">{t.hours.phoneLabel}</p>
               <a href="tel:0102030405" className="hours__contact-value">
                 01 02 03 04 05
               </a>
             </div>
             <div>
-              <p className="hours__contact-label">Adresse</p>
+              <p className="hours__contact-label">{t.hours.addressLabel}</p>
               <p className="hours__contact-value">
                 12 Rue Saint-François-de-Paule, 06300 Nice
               </p>

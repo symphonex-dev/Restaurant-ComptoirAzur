@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import './Menu.css'
 import Reveal from './Reveal'
-import { menuCategories } from '../data/menuData'
+import { menuCategoriesByLang } from '../data/menuData'
+import { useLanguage } from '../i18n/LanguageContext'
 
 // ============================================================================
 // COMPOSANT Menu
@@ -20,6 +21,12 @@ import { menuCategories } from '../data/menuData'
 // ça doit ressembler si l'état vaut X".
 // ============================================================================
 export default function Menu() {
+  const { language, t } = useLanguage()
+  // menuCategories dépend de la langue active, mais l'ID de la catégorie
+  // sélectionnée (activeCategory) ne dépend QUE de l'utilisateur : ce sont
+  // les mêmes id ("entrees", "plats"…) dans les deux langues, donc l'onglet
+  // choisi reste sélectionné même après un changement de langue.
+  const menuCategories = menuCategoriesByLang[language]
   const [activeCategory, setActiveCategory] = useState(menuCategories[0].id)
 
   const activeDishes =
@@ -43,27 +50,29 @@ export default function Menu() {
     <section id="carte" className="section menu">
       <div className="container">
         <Reveal className="section-head">
-          <p className="eyebrow">La carte</p>
+          <p className="eyebrow">{t.menu.eyebrow}</p>
           <h2 className="section-title">
-            Une cuisine de <em>saison</em>
+            {t.menu.titleBefore} <em>{t.menu.titleEm}</em>
+            {t.menu.titleAfter}
           </h2>
-          <p className="section-lead">
-            La carte évolue au fil des arrivages du marché et de la pêche du jour. Ces suggestions
-            reflètent l'esprit de notre cuisine, entre recettes traditionnelles et touches
-            créatives.
-          </p>
+          <p className="section-lead">{t.menu.lead}</p>
         </Reveal>
 
         {/* Barre d'onglets — role="tablist" et aria-selected permettent à un
             lecteur d'écran de comprendre qu'il s'agit d'un choix exclusif,
-            exactement comme le ferait visuellement un utilisateur voyant. */}
-        <div className="menu__tabs" role="tablist" aria-label="Catégories de la carte">
+            exactement comme le ferait visuellement un utilisateur voyant.
+            data-tab-id (basé sur l'id STABLE de la catégorie, pas sur son
+            libellé traduit) permet à Menu.css de fixer une largeur minimale
+            par onglet afin d'empêcher tout décalage visuel au changement de
+            langue — voir le commentaire correspondant dans Menu.css. */}
+        <div className="menu__tabs" role="tablist" aria-label={t.menu.tablistAria}>
           {menuCategories.map((category, index) => (
             <button
               key={category.id}
               type="button"
               role="tab"
               id={`tab-${category.id}`}
+              data-tab-id={category.id}
               aria-selected={activeCategory === category.id}
               aria-controls={`panel-${category.id}`}
               tabIndex={activeCategory === category.id ? 0 : -1}
